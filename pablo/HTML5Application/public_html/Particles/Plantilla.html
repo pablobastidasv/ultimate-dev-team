@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+      
+        <title>Particles</title>
+		
+    </head>
+    <body>
+	
+		<canvas id="unilibre" width="1024" height="479">No sorportas Canvas</canvas>
+		
+		<script>
+		
+					
+			var VELOCITY = 0.01; 		//velocidad de cada particula
+			var PARTICLES = 100;		//numero de particulas	
+			var mouse = {x:0, y:0};		//pocisión del mouse
+			var particles = [];			//Inicializar arreglo de particulas
+			var colors = [ "#000000","#E94141","#511111","#473EC5","#E8F408","#08F418","#456FBC"];  //colores a manejar
+			var canvas = document.getElementById('unilibre');// Obtiene el objeto Canvas1, creado con <canvas id="unilibre"...
+			var context;
+			
+			
+			if (canvas && canvas.getContext) {
+				context = canvas.getContext('2d');// Obtiene el Contexto(2D) del objeto Canvas
+				
+				for( var i = 0; i < PARTICLES; i++ ) {
+					particles.push( { 
+						x: Math.random() * window.innerWidth,//aparece en cualquier punto de la pantalla x
+						y: Math.random() * window.innerHeight,  //aparece en cualquier punto de la pantalla y
+						vx: ((Math.random() *(VELOCITY*2)) - VELOCITY), // camino que tomarà la particula en x
+						vy: ((Math.random() *(VELOCITY*2)) - VELOCITY), // camino que tomarà la particula en y
+						size: 1 + Math.random() * 3, //tamaño de cada particula (aleatoreo)
+						color: colors [Math.floor (Math.random() + colors.length)]//color es igual a la pocisión aleatorea del arrelgo de colores
+						
+					} );
+				}
+				
+				Initialize();
+			}
+			
+			//inicializar canvas
+			function Initialize() {
+				canvas.addEventListener('mousemove', MouseMove, false);
+				windows.addEventListener('mousedown', MouseDown, false);
+				windows.addEventListener('resize', ResizeCanvas, false);
+				setInterval(TimeUpdate, 10);
+				ResizeCanvas();
+			}
+			
+			function TimeUpdate(e) {
+				
+				context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+				
+				var len = particles.length;
+				var particle;
+				
+				for( var i = 0; i < len; i++ ) {
+					particle = particles[i];
+					
+					if (!particle.frozen) {
+					 //toma trayectoria en función  a vx
+						//toma trayectoria en función  a vx
+						
+						if (particle.x > window.innerWidth) {// cuando  llega al borde en X se devuleve
+							
+						}
+						else if (particle.x < 0) { //el borde contrario en X
+							
+						}
+						else {
+							 //esta dentro de los limites en X
+						}
+						
+						if (particle.y > window.innerHeight) {  // cuando  llega al borde en Y se devuleve
+							
+						}
+						else if (particle.y < 0) { //el borde contrario en Y
+							
+						}
+						else {
+							//esta dentro de los limites en Y
+						}
+						
+						var distanceFactor = DistanceBetween( mouse, particle );
+						distanceFactor = Math.max( Math.min( 15 - ( distanceFactor / 10 ), 10 ), 1 );
+						
+						particle.currentSize = particle.size*distanceFactor;
+					}
+					
+					
+					
+				}
+			}
+			
+			function MouseMove(e) {
+				
+			}
+			
+			function MouseDown(e) {
+				
+				
+				for( var i = 0; i < len; i++ ) {
+					
+					
+				}
+				
+				if (closestDistance < particles[closestIndex].currentSize) {
+					particles[closestIndex].frozen = true;
+				}
+			}
+			
+			function ResizeCanvas(e) {
+				
+			}
+			//distancia entre cada uno
+			function DistanceBetween(p1,p2) {
+				
+			}
+		</script>
+    
+
+</body></html>

@@ -1,0 +1,132 @@
+<html><head>
+<title>3D BASIC</title>
+
+
+		
+<script>
+
+function setup()
+{
+
+
+var fov = 250;//Muestra que tan distorsionados estan los puntos que aparecen en el canvas
+
+var SCREEN_WIDTH = 600; //ancho de pantalla
+var SCREEN_HEIGHT = 300; //altura de pantalla
+
+var HALF_WIDTH = SCREEN_WIDTH/2; //desvia las particulas que estan dentro del canvas horizontalmente
+var HALF_HEIGHT = SCREEN_HEIGHT/2; //desvia las particulas que estan dentro del canvas verticalmente
+
+var numPoints = 200; //numero de puntos que aparecen en el canvas
+
+var mouseX = 0; 
+var mouseY = -200; 
+
+
+function draw3Din2D(point3d) // esta función nos ayudará a transformar el 3d en 2d para ser más comodos
+							// a la hora de representar cualquier punto.
+{  
+	x3d = point3d[0];
+	y3d = point3d[1]; 
+	z3d = point3d[2]; 
+	var scale = fov/(fov+z3d); 
+	var x2d = (x3d * scale) + HALF_WIDTH;	
+	var y2d = (y3d * scale)  + HALF_HEIGHT;
+	
+	
+	c.lineWidth= scale; 
+	// color de las estrellas y tipo de trazo
+	c.strokeStyle = "rgb(255,280,255)"; 	
+	c.beginPath();
+	c.moveTo(x2d,y2d); 
+	c.lineTo(x2d+scale,y2d); 
+	c.stroke(); 
+	// Fin de Función 3Dto2D
+	
+}
+
+var canvas = document.getElementById('Canvas2D'); // llamamos al objeto canvas del código
+var c = canvas.getContext('2d'); //para referenciar el contexto del canvas se hace  la llamada  getContext y su parametro que actualmente es "2d" el cual nos permite dibujar y manipular imagenes y graficos dentro de un elemento canvas
+
+document.onmousemove = updateMouse;// Aprovechamos para coger el raton y así controlar nuestra camara desde el mismo
+//canvas.addEventListener('mousemove', updateMouse, false);
+
+var points = [];
+
+function initPoints() // con esta función damos unos puntos aleatorios iniciales
+{
+	for (i=0; i<numPoints; i++)
+	{
+		point = [(Math.random()*400)-200, (Math.random()*400)-200 , (Math.random()*400)-200 ];
+		points.push(point); 
+	}
+
+}
+
+function render() // Esta función renderizará todo; empezando por el fondo.
+{
+
+	c.fillStyle="rgb(0,0,0)";
+	// delimitamos el fondo que se dibujará 
+  	c.fillRect(0,0, SCREEN_WIDTH, SCREEN_HEIGHT);
+  	
+	for (i=0; i<numPoints; i++)
+	{
+		point3d = points[i]; 
+		rotatePointAroundY(point3d, mouseX*-0.0003); 
+		point3d[2] += (mouseY*0.08); 	
+		
+		
+		if(point3d[0]<-300) point3d[0] = 300; 
+		else if(point3d[0]>300) point3d[0] = -300; 
+		if(point3d[2]<-fov) point3d[2] = fov; 
+		else if(point3d[2]>249) point3d[2] = -249;
+		
+		draw3Din2D(point3d); 
+
+	}
+}
+
+function rotatePointAroundY(point3d, angle)// Esta función nos ayudará a rotar cada punto un determinado numero
+										  // de angle
+{
+	x = point3d[0]; 
+	z = point3d[2]+fov; 
+	
+	cosRY = Math.cos(angle);
+	sinRY = Math.sin(angle);
+	tempz = z; 
+	tempx = x; 
+
+	
+	x= (tempx*cosRY)+(tempz*sinRY);
+	z= (tempx*-sinRY)+(tempz*cosRY);
+	point3d[0] = x; 
+	point3d[2] = z-fov; 
+}
+
+function updateMouse(e) 
+{
+	//alert(c+" "+c.offsetLeft); 
+	mouseX = e.pageX - canvas.offsetLeft - HALF_WIDTH; //se solicitan los valores de las propiedades pageX y pageY del elemento para saber las coordenadas X e Y del raton
+	mouseY = e.pageY - canvas.offsetTop - HALF_HEIGHT; ; 
+}
+
+initPoints();
+var loop = setInterval(function(){render();}, 50);//velocidad de las estrellas
+
+}
+
+</script>
+<style type="text/css">      
+  body{background:#000;color:#fff;font-family:arial;font-size:90%;}
+  .wrap{width:640px;  margin:0 auto;}
+  canvas{border: 1px solid #0f0;}
+  a{color:#0f0;}
+
+  </style>
+</head><body onload="setup();">
+<div class="wrap">
+  <canvas id="Canvas2D" width="600" height="300">Internet Explorer Not Supported :(</canvas>
+ 
+</body></html>
